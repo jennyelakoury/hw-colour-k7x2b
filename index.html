@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Hello, World! Colour all 195 flags</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖍️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;700;800&family=Noto+Sans+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#CDE6F7; --paper:#FFFDF6; --surface:#FFFFFF; --ink:#1E3F8A; --text:#253049; --muted:#5B6782; --line:#D9E3F0;
+  --green:#4FA545; --hill-a:#F4BC34; --hill-b:#5DAA4E;
+  color-scheme: light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --sky:#16294F; --paper:#0F1C38; --surface:#172A50; --ink:#BFD6FF; --text:#E7EEFB; --muted:#A4B3D1; --line:#2A3F69; --hill-a:#C7972A; --hill-b:#3F8237; color-scheme: dark; }
+}
+:root[data-theme="dark"]{ --sky:#16294F; --paper:#0F1C38; --surface:#172A50; --ink:#BFD6FF; --text:#E7EEFB; --muted:#A4B3D1; --line:#2A3F69; --hill-a:#C7972A; --hill-b:#3F8237; color-scheme: dark; }
+*,*::before,*::after{ box-sizing:inherit; }
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+body{ margin:0; background:var(--paper); color:var(--text); font-family:"Nunito","Segoe UI",system-ui,sans-serif; line-height:1.5; }
+h1,h2{ font-family:"Fredoka","Nunito",system-ui,sans-serif; color:var(--ink); margin:0; font-weight:600; line-height:1.1; }
+button,select{ font:inherit; }
+:focus-visible{ outline:3px solid #2F6FD6; outline-offset:3px; border-radius:6px; }
+.wrap{ width:min(1100px, 100% - 2rem); margin-inline:auto; }
+
+.top{ background:var(--sky); padding:1.1rem 0 1.2rem; }
+.top .wrap{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.8rem 1.5rem; }
+.brand{ font:600 1.6rem/1 "Fredoka",sans-serif; color:var(--ink); }
+.brand span{ display:block; font:700 .95rem/1.3 "Nunito",sans-serif; color:var(--muted); margin-top:.3rem; }
+.progress{ font:500 1.05rem "Fredoka",sans-serif; color:var(--ink); background:var(--surface); border:2px solid var(--line); padding:.45rem .9rem; border-radius:999px; white-space:nowrap; }
+
+.bar{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin:1.4rem 0 1rem; }
+.bar select{ flex:1 1 240px; min-width:0; padding:.7rem .9rem; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--text); font-weight:700; }
+.pill{ font:500 1.02rem "Fredoka",sans-serif; padding:.65rem 1.05rem; border-radius:999px; border:2px solid var(--line); background:var(--surface); color:var(--text); cursor:pointer; }
+.pill.primary{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+.sheet{ background:#fff; color:#253049; border-radius:12px; padding:1.2rem 1.2rem 1.4rem; box-shadow:0 2px 0 var(--line), 0 18px 40px rgba(20,40,80,.12); }
+.head{ display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; }
+.count{ font:700 .78rem/1 "Nunito",sans-serif; letter-spacing:.14em; color:#7A8399; }
+.cname{ font:600 clamp(1.7rem,4.5vw,2.4rem)/1.05 "Fredoka",sans-serif; color:#1A1A1A; margin-top:.35rem; }
+.arname{ font:700 1.3rem/1.4 "Noto Sans Arabic",sans-serif; color:#1E3F8A; margin-top:.2rem; text-align:left; }
+.ref{ width:110px; flex:none; text-align:center; font:700 .62rem/1.2 "Nunito",sans-serif; color:#E4473C; letter-spacing:.06em; }
+.ref img{ width:110px; height:auto; display:block; border:1px solid #E3E7EF; margin-bottom:.3rem; background:#fff; }
+.canvaswrap{ position:relative; margin-top:1rem; touch-action:none; -webkit-user-select:none; user-select:none; }
+.canvaswrap canvas{ display:block; width:100%; height:auto; background:#fff; cursor:crosshair; touch-action:none; }
+.canvaswrap svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.canvaswrap svg text{ font:700 26px "Nunito",sans-serif; fill:#8A93A6; letter-spacing:.05em; }
+.loading{ display:grid; place-content:center; aspect-ratio:3/2; color:#7A8399; font-weight:700; }
+.crayons{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-top:1.1rem; }
+.crayon{ width:2.9rem; height:2.9rem; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 2px #CBD3E2; cursor:pointer; padding:0; }
+.crayon[aria-pressed="true"]{ box-shadow:0 0 0 3px #1E3F8A; transform:scale(1.08); }
+.clabel{ font:800 .95rem "Nunito",sans-serif; color:#5B6782; margin-left:.2rem; }
+.under{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:.8rem; margin-top:1rem; }
+.status{ font:500 1.15rem "Fredoka",sans-serif; color:var(--ink); min-height:1.5em; }
+.status.win{ color:var(--green); }
+.ghost{ background:none; border:0; color:var(--muted); font:700 .95rem "Nunito",sans-serif; text-decoration:underline; text-underline-offset:4px; cursor:pointer; padding:0; }
+.foot{ margin:2.5rem 0 0; background:var(--sky); padding:2rem 0 3rem; text-align:center; color:var(--muted); }
+.foot a{ color:var(--ink); font-weight:800; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Hello, World! <span>Colour all 195 flags · لوّن كل أعلام العالم</span></div>
+    <div class="progress" id="progress" aria-live="polite">⭐ 0 of 195 coloured</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="bar">
+    <label for="pick" class="sr" style="position:absolute;left:-9999px">Choose a country</label>
+    <select id="pick"></select>
+    <button class="pill" id="prev" aria-label="Previous country">Back</button>
+    <button class="pill primary" id="next" aria-label="Next country">Next</button>
+    <button class="pill" id="random">Surprise me 🎲</button>
+  </div>
+
+  <section class="sheet" aria-labelledby="cname">
+    <div class="head">
+      <div><div class="count" id="count"></div><h1 class="cname" id="cname"></h1><div class="arname" id="arname" dir="rtl" lang="ar"></div></div>
+      <div class="ref"><img id="refimg" alt=""><span>The real flag</span></div>
+    </div>
+    <div class="canvaswrap" id="board"><div class="loading">Loading the flag…</div></div>
+    <div class="crayons" id="crayons" role="group" aria-label="Crayons"></div>
+    <div class="under">
+      <p class="status" id="status" aria-live="polite">Pick a crayon and start colouring.</p>
+      <button class="ghost" id="reset">Start this flag again</button>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Colour with your finger, a mouse or an Apple Pencil. Your stars are saved on this device.</p>
+  <p>Hello, World! · <a href="https://jennyelakoury.github.io/theworldbookk/">The world book for any age</a></p>
+</footer>
+
+<script>
+const INDEX = [[1, "Afghanistan", "أفغانستان", 1], [2, "Albania", "ألبانيا", 1], [3, "Algeria", "الجزائر", 1], [4, "Andorra", "أندورا", 1], [5, "Angola", "جمهورية أنغولا", 1], [6, "Antigua and Barbuda", "أنتيغوا وباربودا", 1], [7, "Argentina", "الأرجنتين", 1], [8, "Armenia", "أرمينيا", 1], [9, "Australia", "أستراليا", 1], [10, "Austria", "النمسا", 1], [11, "Azerbaijan", "أذربيجان", 1], [12, "Bahamas", "البهاما", 1], [13, "Bahrain", "البحرين", 1], [14, "Bangladesh", "بنغلاديش", 1], [15, "Barbados", "باربادوس", 1], [16, "Belarus", "بيلاروسيا", 1], [17, "Belgium", "بلجيكا", 1], [18, "Belize", "بليز", 1], [19, "Benin", "بنين", 1], [20, "Bhutan", "بوتان", 1], [21, "Bolivia", "بوليفيا", 1], [22, "Bosnia and Herzegovina", "البوسنة والهرسك", 1], [23, "Botswana", "بوتسوانا", 1], [24, "Brazil", "البرازيل", 1], [25, "Brunei", "بروناي", 1], [26, "Bulgaria", "بلغاريا", 2], [27, "Burkina Faso", "بوركينا فاسو", 2], [28, "Burundi", "بوروندي", 2], [29, "Cabo Verde", "الرأس الأخضر", 2], [30, "Cambodia", "كمبوديا", 2], [31, "Cameroon", "الكاميرون", 2], [32, "Canada", "كندا", 2], [33, "Central African Republic", "جمهورية أفريقيا الوسطى", 2], [34, "Chad", "تشاد", 2], [35, "Chile", "تشيلي", 2], [36, "China", "الصين", 2], [37, "Colombia", "كولومبيا", 2], [38, "Comoros", "جزر القمر", 2], [39, "Congo", "جمهورية الكونغو", 2], [40, "Costa Rica", "كوستاريكا", 2], [41, "Côte d’Ivoire", "ساحل العاج", 2], [42, "Croatia", "كرواتيا", 2], [43, "Cuba", "كوبا", 2], [44, "Cyprus", "قبرص", 2], [45, "Czechia", "التشيك", 2], [46, "Democratic Republic of the Congo", "جمهورية الكونغو الديمقراطية", 2], [47, "Denmark", "الدنمارك", 2], [48, "Djibouti", "جيبوتي", 2], [49, "Dominica", "دومينيكا", 2], [50, "Dominican Republic", "جمهورية الدومينيكان", 2], [51, "Ecuador", "الإكوادور", 3], [52, "Egypt", "مصر", 3], [53, "El Salvador", "السلفادور", 3], [54, "Equatorial Guinea", "غينيا الاستوائية", 3], [55, "Eritrea", "إريتريا", 3], [56, "Estonia", "إستونيا", 3], [57, "Eswatini", "إسواتيني", 3], [58, "Ethiopia", "إثيوبيا", 3], [59, "Fiji", "فيجي", 3], [60, "Finland", "فنلندا", 3], [61, "France", "فرنسا", 3], [62, "Gabon", "الغابون", 3], [63, "Gambia", "غامبيا", 3], [64, "Georgia", "جورجيا", 3], [65, "Germany", "ألمانيا", 3], [66, "Ghana", "غانا", 3], [67, "Greece", "اليونان", 3], [68, "Grenada", "غرينادا", 3], [69, "Guatemala", "غواتيمالا", 3], [70, "Guinea", "غينيا", 3], [71, "Guinea-Bissau", "غينيا بيساو", 3], [72, "Guyana", "غيانا", 3], [73, "Haiti", "هايتي", 3], [74, "Honduras", "هندوراس", 3], [75, "Hungary", "المجر", 3], [76, "Iceland", "آيسلندا", 4], [77, "India", "الهند", 4], [78, "Indonesia", "إندونيسيا", 4], [79, "Iran", "إيران", 4], [80, "Iraq", "العراق", 4], [81, "Ireland", "أيرلندا", 4], [82, "Israel", "إسرائيل", 4], [83, "Italy", "إيطاليا", 4], [84, "Jamaica", "جامايكا", 4], [85, "Japan", "اليابان", 4], [86, "Jordan", "الأردن", 4], [87, "Kazakhstan", "كازاخستان", 4], [88, "Kenya", "كينيا", 4], [89, "Kiribati", "كيريباتي", 4], [90, "Kuwait", "الكويت", 4], [91, "Kyrgyzstan", "قيرغيزستان", 4], [92, "Laos", "لاوس", 4], [93, "Latvia", "لاتفيا", 4], [94, "Lebanon", "لبنان", 4], [95, "Lesotho", "ليسوتو", 4], [96, "Liberia", "ليبيريا", 4], [97, "Libya", "ليبيا", 4], [98, "Liechtenstein", "ليختنشتاين", 4], [99, "Lithuania", "ليتوانيا", 4], [100, "Luxembourg", "لوكسمبورغ", 4], [101, "Madagascar", "مدغشقر", 5], [102, "Malawi", "مالاوي", 5], [103, "Malaysia", "ماليزيا", 5], [104, "Maldives", "المالديف", 5], [105, "Mali", "مالي", 5], [106, "Malta", "مالطا", 5], [107, "Marshall Islands", "جزر مارشال", 5], [108, "Mauritania", "موريتانيا", 5], [109, "Mauritius", "موريشيوس", 5], [110, "Mexico", "المسكيك", 5], [111, "Micronesia", "ميكرونيزيا", 5], [112, "Moldova", "مولدوڤا", 5], [113, "Monaco", "موناكو", 5], [114, "Mongolia", "منغوليا", 5], [115, "Montenegro", "الجبل الاسود", 5], [116, "Morocco", "المغرب", 5], [117, "Mozambique", "موزمبيق", 5], [118, "Myanmar", "ميانمار", 5], [119, "Namibia", "ناميبيا", 5], [120, "Nauru", "ناورو", 5], [121, "Nepal", "نيبال", 5], [122, "Netherlands", "هولندا", 5], [123, "New Zealand", "نيوزيلندا", 5], [124, "Nicaragua", "نيكاراغوا", 5], [125, "Niger", "النيجر", 5], [126, "Nigeria", "نيجيريا", 6], [127, "North Korea", "كوريا الشمالية", 6], [128, "North Macedonia", "مقدونيا الشمالية", 6], [129, "Norway", "النرويج", 6], [130, "Oman", "عمان", 6], [131, "Pakistan", "باكستان", 6], [132, "Palau", "بالاو", 6], [133, "Palestine", "فلسطين", 6], [134, "Panama", "بنما", 6], [135, "Papua New Guinea", "بابوا غينيا الجديدة", 6], [136, "Paraguay", "باراغواي", 6], [137, "Peru", "بيرو", 6], [138, "Philippines", "الفلبين", 6], [139, "Poland", "بولندا", 6], [140, "Portugal", "البرتغال", 6], [141, "Qatar", "قطر", 6], [142, "Romania", "رومانيا", 6], [143, "Russia", "روسيا", 6], [144, "Rwanda", "رواندا", 6], [145, "Saint Kitts and Nevis", "سانت كيتس ونيفيس", 6], [146, "Saint Lucia", "سانت لوسيا", 6], [147, "Saint Vincent and the Grenadines", "سانت فينسنت والغرينادين", 6], [148, "Samoa", "ساموا", 6], [149, "San Marino", "سان مارينو", 6], [150, "São Tomé and Príncipe", "ساو تومي وبرينسيب", 6], [151, "Saudi Arabia", "السعودية", 7], [152, "Senegal", "السنغال", 7], [153, "Serbia", "صيربيا", 7], [154, "Seychelles", "سيشل", 7], [155, "Sierra Leone", "سيراليون", 7], [156, "Singapore", "سنغافورة", 7], [157, "Slovakia", "سلوفاكيا", 7], [158, "Slovenia", "سلوفينيا", 7], [159, "Solomon Islands", "جزر سليمان", 7], [160, "Somalia", "الصومال", 7], [161, "South Africa", "جنوب أفريقيا", 7], [162, "South Korea", "كوريا الجنوبية", 7], [163, "South Sudan", "جنوب السودان", 7], [164, "Spain", "إسبانيا", 7], [165, "Sri Lanka", "سريلانكا", 7], [166, "Sudan", "السودان", 7], [167, "Suriname", "سورينام", 7], [168, "Sweden", "السويد", 7], [169, "Switzerland", "سويسرا", 7], [170, "Syria", "سوريا", 7], [171, "Tajikistan", "طاجيكستان", 7], [172, "Tanzania", "تنزانيا", 7], [173, "Thailand", "تايلند", 7], [174, "Timor-Leste", "تيمور الشرقية", 7], [175, "Togo", "توغو", 7], [176, "Tonga", "تونغا", 8], [177, "Trinidad and Tobago", "ترينيداد وتوباغو", 8], [178, "Tunisia", "تونس", 8], [179, "Türkiye", "تركيا", 8], [180, "Turkmenistan", "تركمانستان", 8], [181, "Tuvalu", "توفالو", 8], [182, "Uganda", "أوغندا", 8], [183, "Ukraine", "أوكرانيا", 8], [184, "United Arab Emirates", "الإمارات العربية المتحدة", 8], [185, "United Kingdom", "المملكة المتحدة", 8], [186, "United States", "الولايات المتحدة الأمريكية", 8], [187, "Uruguay", "الأوروغواي", 8], [188, "Uzbekistan", "أوزباكستان", 8], [189, "Vanuatu", "فانواتو", 8], [190, "Vatican City", "الفاتيكان", 8], [191, "Venezuela", "فنزويلا", 8], [192, "Vietnam", "فيتنام", 8], [193, "Yemen", "اليمن", 8], [194, "Zambia", "زامبيا", 8], [195, "Zimbabwe", "زيمبابوي", 8]]; // [number, English name, Arabic name, data file]
+const PAL = {"RED":"#E4473C","WHITE":"#FFFFFF","BLUE":"#2F4FA8","YELLOW":"#F4BC34","GREEN":"#3E9A48","BLACK":"#26262B","LIGHT BLUE":"#69B3EC","ORANGE":"#F28C28","BROWN":"#8B5A2B","GRAY":"#9AA0A6","DARK GREEN":"#1E6B3A","DARK BLUE":"#1B2C6B","DARK RED":"#8E1B2A","PURPLE":"#7B4FB0","LIGHT GREEN":"#8CCB5E","DARK":"#26262B"};
+const loaded = {}; let cur = 0, flag = null, pick = null, cv, ctx, drawing = false, last = null, timer = null;
+
+function slug(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function getDone(){ try { return new Set(JSON.parse(localStorage.getItem('hw-done') || '[]')); } catch(_) { return new Set(); } }
+function addDone(n){ const d = getDone(); d.add(n); try { localStorage.setItem('hw-done', JSON.stringify([...d])); } catch(_){} showProgress(); }
+function showProgress(){ const d = getDone(); document.getElementById('progress').textContent = `⭐ ${d.size} of 195 coloured`;
+  [...document.getElementById('pick').options].forEach((o,i) => { o.textContent = `${d.has(INDEX[i][0]) ? '⭐ ' : ''}${INDEX[i][0]}. ${INDEX[i][1]}`; }); }
+function setStatus(t, win){ const s = document.getElementById('status'); s.textContent = t; s.className = win ? 'status win' : 'status'; }
+
+function loadPart(p){
+  if (loaded[p]) return loaded[p];
+  return loaded[p] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = `flags-${p}.js`; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+}
+
+async function show(i, push){
+  cur = (i + INDEX.length) % INDEX.length;
+  const [n, name, ar, part] = INDEX[cur];
+  document.getElementById('pick').value = cur;
+  document.getElementById('count').textContent = `COUNTRY ${n} OF 195`;
+  document.getElementById('cname').textContent = name;
+  document.getElementById('arname').textContent = ar;
+  document.getElementById('board').innerHTML = '<div class="loading">Loading the flag…</div>';
+  document.getElementById('refimg').removeAttribute('src');
+  setStatus('Pick a crayon and start colouring.');
+  if (push !== false){ const h = '#' + slug(name); if (location.hash !== h) history.replaceState(null, '', h); }
+  try { await loadPart(part); } catch(e){ document.getElementById('board').innerHTML = '<div class="loading">Couldn’t load this flag. Please check your connection and try again.</div>'; return; }
+  if (INDEX[cur][0] !== n) return;
+  flag = window.HW_FLAGS[n];
+  const ref = document.getElementById('refimg'); ref.src = flag.ref; ref.alt = `The real flag of ${name}`;
+  const labels = flag.labels.map(l => `<text x="${(l[0]*flag.w).toFixed(1)}" y="${(l[1]*flag.h + 9).toFixed(1)}" text-anchor="middle">${l[2]}</text>`).join('');
+  document.getElementById('board').innerHTML = `<canvas width="${flag.w}" height="${flag.h}" role="img" aria-label="Colour the flag of ${name} here"></canvas>` +
+    `<svg viewBox="0 0 ${flag.w} ${flag.h}" aria-hidden="true"><image href="${flag.outline}" x="0" y="0" width="${flag.w}" height="${flag.h}"/>${labels}</svg>`;
+  cv = document.querySelector('#board canvas'); ctx = cv.getContext('2d'); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  cv.addEventListener('pointerdown', down); cv.addEventListener('pointermove', move);
+  ['pointerup','pointercancel','pointerleave'].forEach(ev => cv.addEventListener(ev, up));
+  const box = document.getElementById('crayons'); box.innerHTML = '';
+  flag.cols.forEach((c, k) => {
+    const b = document.createElement('button'); b.className = 'crayon'; b.style.background = PAL[c];
+    b.setAttribute('aria-label', c.toLowerCase() + ' crayon'); b.title = c.toLowerCase(); b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => choose(c)); box.appendChild(b);
+  });
+  const lab = document.createElement('span'); lab.className = 'clabel'; lab.id = 'clabel'; box.appendChild(lab);
+  choose(flag.cols.find(c => c !== 'WHITE') || flag.cols[0]);
+}
+function choose(c){
+  pick = c;
+  document.querySelectorAll('.crayon').forEach(b => b.setAttribute('aria-pressed', b.title === c.toLowerCase()));
+  const l = document.getElementById('clabel'); if (l) l.textContent = c.charAt(0) + c.slice(1).toLowerCase();
+}
+
+function pos(e){ const r = cv.getBoundingClientRect();
+  return { x:(e.clientX - r.left) / r.width * cv.width, y:(e.clientY - r.top) / r.height * cv.height, p: e.pointerType === 'pen' ? Math.max(.15, e.pressure || .5) : .55 }; }
+function line(a, b){
+  const c = flag.clip; ctx.save(); ctx.beginPath(); ctx.rect(c[0]*cv.width, c[1]*cv.height, (c[2]-c[0])*cv.width, (c[3]-c[1])*cv.height); ctx.clip();
+  ctx.strokeStyle = PAL[pick]; ctx.lineWidth = (pick === 'WHITE' ? 40 : 30) * (cv.width / 1200) * (0.55 + b.p);
+  ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); ctx.restore();
+}
+function down(e){ if (!pick) return; e.preventDefault(); drawing = true; last = pos(e); try { cv.setPointerCapture(e.pointerId); } catch(_){} line(last, last); }
+function move(e){ if (!drawing) return; e.preventDefault(); const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  (evs.length ? evs : [e]).forEach(ev => { const p = pos(ev); line(last, p); last = p; }); }
+function up(){ if (!drawing) return; drawing = false; last = null; clearTimeout(timer); timer = setTimeout(check, 250); }
+
+function rgb(h){ return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)]; }
+function check(){
+  if (!flag) return;
+  const data = ctx.getImageData(0, 0, cv.width, cv.height).data, cols = flag.cols, P = cols.map(c => rgb(PAL[c]));
+  let need = 0, covered = 0, right = 0, whiteCells = 0, whiteSpoiled = 0, any = false; const per = {};
+  for (let gy = 0; gy < flag.gh; gy++) for (let gx = 0; gx < flag.gw; gx++){
+    const ch = flag.grid[gy * flag.gw + gx]; if (ch === '.') continue;
+    const want = cols[+ch], x = Math.floor((gx + .5) / flag.gw * cv.width), y = Math.floor((gy + .5) / flag.gh * cv.height);
+    const i = (y * cv.width + x) * 4, a = data[i+3], r = data[i], g = data[i+1], b = data[i+2];
+    const blank = a < 40 || (r > 235 && g > 235 && b > 235);
+    let got = null;
+    if (!blank){ any = true; let bd = 1e9; cols.forEach((c, k) => { if (c === 'WHITE') return; const d = (r-P[k][0])**2 + (g-P[k][1])**2 + (b-P[k][2])**2; if (d < bd){ bd = d; got = c; } }); }
+    if (want === 'WHITE'){ whiteCells++; if (got) whiteSpoiled++; continue; }
+    need++; per[want] = per[want] || [0,0]; per[want][0]++; if (got){ covered++; per[want][1]++; if (got === want) right++; }
+  }
+  if (!any) return setStatus('Pick a crayon and start colouring.');
+  const cover = need ? covered / need : 1, match = covered ? right / covered : 1, spoil = whiteCells ? whiteSpoiled / whiteCells : 0;
+  const missing = Object.values(per).some(([t, c]) => t >= 3 && c / t < .5);
+  if (cover < .65 || missing) return setStatus('Keep going, you’re doing great.');
+  if (match >= .72 && spoil <= .3){ setStatus(`You coloured ${INDEX[cur][1]}! 🎉`, true); addDone(INDEX[cur][0]); }
+  else setStatus('Almost! Check the real flag in the corner.');
+}
+
+const sel = document.getElementById('pick');
+INDEX.forEach((c, i) => { const o = document.createElement('option'); o.value = i; o.textContent = `${c[0]}. ${c[1]}`; sel.appendChild(o); });
+sel.addEventListener('change', () => show(+sel.value));
+document.getElementById('prev').addEventListener('click', () => show(cur - 1));
+document.getElementById('next').addEventListener('click', () => show(cur + 1));
+document.getElementById('random').addEventListener('click', () => show(Math.floor(Math.random() * INDEX.length)));
+document.getElementById('reset').addEventListener('click', () => show(cur, false));
+function fromHash(){ const h = location.hash.slice(1); const i = INDEX.findIndex(c => slug(c[1]) === h); return i >= 0 ? i : 0; }
+window.addEventListener('hashchange', () => { const i = fromHash(); if (i !== cur) show(i, false); });
+showProgress(); show(fromHash(), false);
+</script>
+</body>
+</html>
